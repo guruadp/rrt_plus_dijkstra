@@ -13,7 +13,6 @@ class Nodes:
         self.parent_x = []
         self.parent_y = []
 
-
 node_list = [0]
 
 # check collision
@@ -124,7 +123,7 @@ def RRT(img, img2, start, end, stepSize):
 
             cv2.circle(img2, (int(tx),int(ty)), 2,(0,0,255),thickness=3, lineType=8)
             cv2.line(img2, (int(tx),int(ty)), (int(node_list[nearest_ind].x),int(node_list[nearest_ind].y)), (0,255,0), thickness=1, lineType=8)
-            cv2.line(img2, (int(tx),int(ty)), (end[0],end[1]), (255,0,0), thickness=2, lineType=8)
+            cv2.line(img2, (int(tx),int(ty)), (end[0],end[1]), (255,0,0), thickness=1, lineType=8)
 
             print("Path has been found")
             #print("parent_x",node_list[i].parent_x)
@@ -132,10 +131,12 @@ def RRT(img, img2, start, end, stepSize):
                 cv2.line(img2, (int(node_list[i].parent_x[j]),int(node_list[i].parent_y[j])), (int(node_list[i].parent_x[j+1]),int(node_list[i].parent_y[j+1])), (255,0,0), thickness=2, lineType=8)
                 #print("X and Y: ",(int(node_list[i].parent_x[j]),int(node_list[i].parent_y[j])))
                 path.append((int(node_list[i].parent_x[j]), 250 - int(node_list[i].parent_y[j])))
+            path.append((int(node_list[i].parent_x[j]), 250 - int(node_list[i].parent_y[j])))
             # cv2.waitKey(1)
-            cv2.imwrite("media/"+str(i)+".jpg",img2)
+            # cv2.imwrite("media/"+str(i)+".jpg",img2)
             cv2.imwrite("output/rrt_output.jpg",img2)
-            
+            cv2.imshow("sdc",img2)
+            cv2.waitKey(1)
             break
         
         elif nodeCon:
@@ -152,9 +153,9 @@ def RRT(img, img2, start, end, stepSize):
             # display
             cv2.circle(img2, (int(tx),int(ty)), 2,(0,0,255),thickness=3, lineType=8)
             cv2.line(img2, (int(tx),int(ty)), (int(node_list[nearest_ind].x),int(node_list[nearest_ind].y)), (0,255,0), thickness=1, lineType=8)
-            cv2.imwrite("media/"+str(i)+".jpg",img2)
-            cv2.imshow("sdc",img2)
-            cv2.waitKey(1)
+            # cv2.imwrite("media/"+str(i)+".jpg",img2)
+            # cv2.imshow("sdc",img2)
+            # cv2.waitKey(1)
             continue
 
         else:

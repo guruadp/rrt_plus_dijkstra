@@ -1,5 +1,6 @@
 from utils.dijkstra import *
 from utils.rrt import *
+from utils.path_comparison import *
 from sortedcollections import OrderedSet
 
 coordinates = []
@@ -13,7 +14,7 @@ def draw_circle(event,x,y,flags,param):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description = 'Below are the params:')
-    parser.add_argument('-p', type=str, default='image.jpg',metavar='ImagePath', action='store', dest='imagePath',
+    parser.add_argument('-p', type=str, default='input/map1.jpg',metavar='ImagePath', action='store', dest='imagePath',
                     help='Path of the image containing mazes')
     parser.add_argument('-s', type=int, default=10,metavar='Stepsize', action='store', dest='stepSize',
                     help='Step-size to be used for RRT branches')
@@ -33,6 +34,7 @@ if __name__ == '__main__':
     os.mkdir("media")
 
     img = cv2.imread(args.imagePath,0) # load grayscale maze image
+    print("ORG IMAGE: ", img.shape)
     img2 = cv2.imread(args.imagePath) # load colored maze image
     start = tuple(args.start) #(20,20) # starting coordinate
     end = tuple(args.stop) #(450,250) # target coordinate
@@ -63,11 +65,15 @@ if __name__ == '__main__':
     print(path)
 
     # run the Dijkstra algorithm 
+    # print("IMG: ",img)
+    ret,thresh = cv2.threshold(img,70,255,0)
+    # print("BINARY: ", thresh)
     obstacle_points = OrderedSet()
-    for i in range(img.shape[1]):
-        for j in range(img.shape[0]):
-            if img[j][i] == 0:
-                obstacle_points.add((i,j))
+    for i in range(thresh.shape[1]):
+        for j in range(thresh.shape[0]):            
+            if thresh[j][i] == 0:
+                obstacle_points.add((i,thresh.shape[0] - j))
+
     dstart = (start[0], img.shape[0]-start[1])
     dend = (end[0], img.shape[0]-end[1])
     backtracking_data, traversal_path_cost = dijkstra(dstart, dend, obstacle_points)
@@ -80,3 +86,5 @@ if __name__ == '__main__':
 
     print("The Dijkstra path with cost from source to destination is : ")
     print(traversal_path_cost)
+
+    compare_path(thresh, path, backtracking_data)

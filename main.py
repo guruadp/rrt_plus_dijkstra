@@ -34,6 +34,7 @@ if __name__ == '__main__':
     os.mkdir("media")
 
     img = cv2.imread(args.imagePath,0) # load grayscale maze image
+    img_copy = img.copy()
     print("ORG IMAGE: ", img.shape)
     img2 = cv2.imread(args.imagePath) # load colored maze image
     start = tuple(args.start) #(20,20) # starting coordinate
@@ -76,7 +77,7 @@ if __name__ == '__main__':
 
     dstart = (start[0], img.shape[0]-start[1])
     dend = (end[0], img.shape[0]-end[1])
-    backtracking_data, traversal_path_cost = dijkstra(dstart, dend, obstacle_points)
+    backtracking_data, traversal_path_cost = dijkstra(dstart, dend, obstacle_points, thresh)
     color_img = cv2.cvtColor(img,cv2.COLOR_GRAY2RGB)
     for pts in backtracking_data:
         color_img = cv2.circle(color_img,(pts[0],color_img.shape[0]-pts[1]),1,(0,0,255),-1)
@@ -87,4 +88,4 @@ if __name__ == '__main__':
     print("The Dijkstra path with cost from source to destination is : ")
     print(traversal_path_cost)
 
-    compare_path(thresh, path, backtracking_data)
+    compare_path(img_copy, path, backtracking_data, traversal_path_cost)

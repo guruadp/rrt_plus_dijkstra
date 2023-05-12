@@ -6,7 +6,7 @@ import numpy as np
 from sortedcollections import OrderedSet
 
 
-start = time.time()
+
 
 ###########################################################################################################################
 ################################# MAP #########################################
@@ -187,8 +187,10 @@ def ActionMoveDownRight(curr_node, obstacle_map):
 
 
 
-def dijkstra(source_point, goal_point, obstacleMap):
-
+def dijkstra(source_point, goal_point, obstacleMap, thresh):
+    start = time.time()
+    X_SIZE = thresh.shape[1]
+    Y_SIZE = thresh.shape[0]
     global p_q
     p_q = PriorityQueue()
     global cost_map
@@ -210,17 +212,17 @@ def dijkstra(source_point, goal_point, obstacleMap):
                 ActionMoveDown(curr_node, obstacleMap)
             if x-1 > 0:
                 ActionMoveLeft(curr_node, obstacleMap)
-            if y+1 < 250:
+            if y+1 < Y_SIZE:
                 ActionMoveUp(curr_node, obstacleMap)
-            if x+1 < 600:
+            if x+1 < X_SIZE:
                 ActionMoveRight(curr_node, obstacleMap)
-            if x-1 > 0 and y+1 < 250:
+            if x-1 > 0 and y+1 < Y_SIZE:
                 ActionMoveUpLeft(curr_node, obstacleMap)
-            if x+1 < 600 and y+1 < 250:
+            if x+1 < X_SIZE and y+1 < Y_SIZE:
                 ActionMoveUpRight(curr_node, obstacleMap)
             if x-1 > 0 and y-1 > 0:
                 ActionMoveDownLeft(curr_node, obstacleMap)
-            if x+1 < 600 and y-1 > 0:
+            if x+1 < X_SIZE and y-1 > 0:
                 ActionMoveDownRight(curr_node, obstacleMap)
             
         else:

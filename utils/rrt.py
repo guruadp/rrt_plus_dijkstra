@@ -20,15 +20,15 @@ def collision(x1,y1,x2,y2,img):
     color=[]
     x = list(np.arange(x1,x2,(x2-x1)/100))
     y = list(((y2-y1)/(x2-x1))*(x-x1) + y1)
-    print("collision",x,y)
+    # print("collision",x,y)
     for i in range(len(x)):
-        print(int(x[i]),int(y[i]))
+        # print(int(x[i]),int(y[i]))
         color.append(img[int(y[i]),int(x[i])])
     if (0 in color):
         return True #collision
     else:
         return False #no-collision
-
+end_path = []
 # check the  collision with obstacle and trim
 def check_collision(x1,y1,x2,y2,stepSize,img,end):
     _,theta = dist_and_angle(x2,y2,x1,y1)
@@ -50,6 +50,10 @@ def check_collision(x1,y1,x2,y2,stepSize,img,end):
         if collision(x,y,end[0],end[1],img):
             directCon = False
         else:
+            # print("endeyy")
+            # print(x,y,end[0],end[1])
+            end_path.append((int(x), int(hy-y)))
+            end_path.append((end[0],hy-end[1]))
             directCon=True
 
         # check connection between two nodes
@@ -101,7 +105,7 @@ def RRT(img, img2, start, end, stepSize):
     pathFound = False
     while pathFound==False:
         nx,ny = rnd_point(h,l)
-        print("Random points:",nx,ny)
+        # print("Random points:",nx,ny)
 
         nearest_ind = nearest_node(nx,ny)
         nearest_x = node_list[nearest_ind].x
@@ -110,7 +114,7 @@ def RRT(img, img2, start, end, stepSize):
 
         #check direct connection
         tx,ty,directCon,nodeCon = check_collision(nx,ny,nearest_x,nearest_y,stepSize,img,end)
-        print("Check collision:",tx,ty,directCon,nodeCon)
+        # print("Check collision:",tx,ty,directCon,nodeCon)
 
         if directCon and nodeCon:
             print("Node can connect directly with end")
@@ -130,10 +134,12 @@ def RRT(img, img2, start, end, stepSize):
             for j in range(len(node_list[i].parent_x)-1):
                 cv2.line(img2, (int(node_list[i].parent_x[j]),int(node_list[i].parent_y[j])), (int(node_list[i].parent_x[j+1]),int(node_list[i].parent_y[j+1])), (255,0,0), thickness=2, lineType=8)
                 #print("X and Y: ",(int(node_list[i].parent_x[j]),int(node_list[i].parent_y[j])))
-                path.append((int(node_list[i].parent_x[j]), 250 - int(node_list[i].parent_y[j])))
-            path.append((int(node_list[i].parent_x[j]), 250 - int(node_list[i].parent_y[j])))
+                path.append((int(node_list[i].parent_x[j]), h - int(node_list[i].parent_y[j])))
+            # path.append((int(node_list[i].parent_x[j]), h - int(node_list[i].parent_y[j])))
             # cv2.waitKey(1)
             # cv2.imwrite("media/"+str(i)+".jpg",img2)
+            path.append(end_path[0])
+            path.append(end_path[1])
             cv2.imwrite("output/rrt_output.jpg",img2)
             cv2.imshow("sdc",img2)
             cv2.waitKey(1)

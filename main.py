@@ -51,6 +51,7 @@ if __name__ == '__main__':
             cv2.imshow('image',img2)
             k = cv2.waitKey(20) & 0xFF
             if k == 27:
+                cv2.destroyAllWindows()
                 break
         # print(coordinates)
 
@@ -60,10 +61,12 @@ if __name__ == '__main__':
     print("The start co-ordinate is : ", start)
     print("The end co-ordinate is : ", end)
 
+    start_time = time.time()
     # run the RRT algorithm 
     RRT(img, img2, start, end, stepSize)
-    print("The RRT path with cost from source to destination is : ")
-    print(path)
+    print("RRT Execution time: ", time.time() - start_time)
+    # print("The RRT path with cost from source to destination is : ")
+    # print(path)
 
     # run the Dijkstra algorithm 
     # print("IMG: ",img)
@@ -82,10 +85,12 @@ if __name__ == '__main__':
     for pts in backtracking_data:
         color_img = cv2.circle(color_img,(pts[0],color_img.shape[0]-pts[1]),1,(0,0,255),-1)
     cv2.imwrite("output/Dijkstra_output.jpg",color_img)
-    cv2.imshow("Dijkstra path", color_img)
+    # cv2.imshow("Dijkstra path", color_img)
     cv2.waitKey(0)
 
-    print("The Dijkstra path with cost from source to destination is : ")
-    print(traversal_path_cost)
+    # print("The Dijkstra path with cost from source to destination is : ")
+    # print(traversal_path_cost)
 
     compare_path(img_copy, path, backtracking_data, traversal_path_cost)
+
+    print("RRT+Dijkstra Execution time: ", time.time() - start_time)

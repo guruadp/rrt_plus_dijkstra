@@ -91,11 +91,8 @@ def compare_path(obs_map, rrt_path, dijkstra_path, dijkstra_path_with_cost):
                 cv2.circle(obs_map, (d_path[0], obs_map.shape[0] - d_path[1]), 1, (0,0,255), -1)
 
     opti_path = []
-    # opti_path_cost = []
-    opti_path_cost = 0
-    # print("DIJ Path len: ", len(dijkstra_path))
+    opti_path_with_cost = []
     for i in range(len(match_points)-1):
-        
         # print("E DIST: ", euclidean_distance(match_points[i], match_points[i+1]))
         if euclidean_distance(match_points[i], match_points[i+1]) > 10:
             r_idx_n = R_PATH.index(match_points[i+1])
@@ -107,48 +104,38 @@ def compare_path(obs_map, rrt_path, dijkstra_path, dijkstra_path_with_cost):
             # rrt_cost = R_PATH_WITH_COST[r_idx][1]
             # dij_cost = dijkstra_path_with_cost[d_idx][1]
             rrt_cost = R_PATH_WITH_COST[r_idx_n][1] - R_PATH_WITH_COST[r_idx][1]
-            try: 
-                dij_cost = dijkstra_path_with_cost[d_idx_n][1] - dijkstra_path_with_cost[d_idx][1]
-            except: 
-                print("Error")
-                print(d_idx, d_idx_n)
-                break
-
-            # print("R cost at Match point "+str(i+1)+": ", rrt_cost)
-            # print("D cost at Match point "+str(i+1)+": ", dij_cost)
-            if abs(rrt_cost - dij_cost) < 10:
-                # print("Adding R Path")
-                sliced_path = rrt_path[r_idx:r_idx_n+1]
+            dij_cost = dijkstra_path_with_cost[d_idx_n][1] - dijkstra_path_with_cost[d_idx][1]
+            print("R cost at Match point "+str(i+1)+": ", rrt_cost)
+            print("D cost at Match point "+str(i+1)+": ", dij_cost)
+            if abs(rrt_cost - dij_cost) < 5:
+                print("Adding R Path")
+                sliced_path = R_PATH[r_idx:r_idx_n+1]
                 opti_path.extend(sliced_path)
-                opti_path_cost += rrt_cost
             else:
-                # print("Adding D Path")
+                print("Adding D Path")
                 sliced_path = dijkstra_path[d_idx:d_idx_n+1]
                 opti_path.extend(sliced_path)
-                opti_path_cost += dij_cost
 
         else:
-            # print("Adding R Path")
+            print("Adding R Path")
             r_idx = R_PATH.index(match_points[i])
             r_idx_n = R_PATH.index(match_points[i+1])
-            rrt_cost = R_PATH_WITH_COST[r_idx_n][1] - R_PATH_WITH_COST[r_idx][1]
-            sliced_path = rrt_path[r_idx:r_idx_n+1]
+            sliced_path = R_PATH[r_idx:r_idx_n+1]
             opti_path.extend(sliced_path)
-            opti_path_cost += rrt_cost
-    opti_path.append(rrt_path[-1])
+
     opti_path = [i for n, i in enumerate(opti_path) if i not in opti_path[:n]]
 
-    # print("Opti path: ", opti_path)
+    print("Opti path: ", opti_path)
 
     for i in range(len(opti_path)-1):
         cv2.line(optimal_map, (opti_path[i][0], h - opti_path[i][1]), (opti_path[i+1][0], h - opti_path[i+1][1]), (255,0,0), thickness=1, lineType=8)
-    # print("Matching points: ",match_points)
+    print("Matching points: ",match_points)
 
     print("Num of nodes in RRT: ", len(rrt_path))
     print("Num of nodes in RRT+Dijkstra: ", len(optimal_map))
 
     print("Cost of RRT: ", R_PATH_WITH_COST[-1][1])
-    print("Cost of RRT+Dijkstra: ", opti_path_cost)
+    print("Cost of RRT+Dijkstra: ")
 
     combime_map = cv2.hconcat([obs_map, optimal_map])
     # cv2.imshow("Final", combime_map)

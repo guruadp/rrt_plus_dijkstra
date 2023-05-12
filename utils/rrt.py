@@ -34,9 +34,9 @@ def check_collision(x1,y1,x2,y2,stepSize,img,end):
     _,theta = dist_and_angle(x2,y2,x1,y1)
     x=x2 + stepSize*np.cos(theta)
     y=y2 + stepSize*np.sin(theta)
-    print(x2,y2,x1,y1)
-    print("theta",theta)
-    print("check_collision",x,y)
+    # print(x2,y2,x1,y1)
+    # print("theta",theta)
+    # print("check_collision",x,y)
 
     # TODO: trim the branch if its going out of image area
     # print("Image shape",img.shape)
@@ -110,14 +110,14 @@ def RRT(img, img2, start, end, stepSize):
         nearest_ind = nearest_node(nx,ny)
         nearest_x = node_list[nearest_ind].x
         nearest_y = node_list[nearest_ind].y
-        print("Nearest node coordinates:",nearest_x,nearest_y)
+        # print("Nearest node coordinates:",nearest_x,nearest_y)
 
         #check direct connection
         tx,ty,directCon,nodeCon = check_collision(nx,ny,nearest_x,nearest_y,stepSize,img,end)
         # print("Check collision:",tx,ty,directCon,nodeCon)
 
         if directCon and nodeCon:
-            print("Node can connect directly with end")
+            # print("Node can connect directly with end")
             node_list.append(i)
             node_list[i] = Nodes(tx,ty)
             node_list[i].parent_x = node_list[nearest_ind].parent_x.copy()
@@ -141,12 +141,12 @@ def RRT(img, img2, start, end, stepSize):
             path.append(end_path[0])
             path.append(end_path[1])
             cv2.imwrite("output/rrt_output.jpg",img2)
-            cv2.imshow("sdc",img2)
+            # cv2.imshow("sdc",img2)
             cv2.waitKey(1)
             break
         
         elif nodeCon:
-            print("Nodes connected")
+            # print("Nodes connected")
             node_list.append(i)
             node_list[i] = Nodes(tx,ty)
             node_list[i].parent_x = node_list[nearest_ind].parent_x.copy()
@@ -165,5 +165,5 @@ def RRT(img, img2, start, end, stepSize):
             continue
 
         else:
-            print("No direct con. and no node con. :( Generating new rnd numbers")
+            # print("No direct con. and no node con. :( Generating new rnd numbers")
             continue

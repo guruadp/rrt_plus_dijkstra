@@ -232,8 +232,8 @@ def dijkstra(source_point, goal_point, obstacleMap, thresh):
             print("Reached y coordinate is:",y)
             print("time taken for reaching from source to destination is ", time_taken)
             backtracking_data, length, cost_list, traversal_path_cost = back_tracking(node_path, source_point, curr_node[1], cost_map)
-            print("The backtracked data from source to goal nodes are as follows: ")
-            print(backtracking_data)
+            # print("The backtracked data from source to goal nodes are as follows: ")
+            # print(backtracking_data)
 
             #pygame_plot(visited_nodes, backtracking_data)
             return backtracking_data,traversal_path_cost

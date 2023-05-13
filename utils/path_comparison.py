@@ -116,7 +116,7 @@ def compare_path(obs_map, rrt_path, dijkstra_path, dijkstra_path_with_cost):
 
             # print("R cost at Match point "+str(i+1)+": ", rrt_cost)
             # print("D cost at Match point "+str(i+1)+": ", dij_cost)
-            if abs(rrt_cost - dij_cost) < 10:
+            if abs(rrt_cost - dij_cost) < 5:
                 # print("Adding R Path")
                 sliced_path = rrt_path[r_idx:r_idx_n+1]
                 opti_path.extend(sliced_path)
